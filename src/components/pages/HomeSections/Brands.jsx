@@ -14,8 +14,17 @@ import Brand11 from "../../../assets/brands/vecteezy_volkswagen-brand-logo-car-s
 
 export default function Brands() {
   const brands = [
-    Brand1, Brand2, Brand3, Brand4, Brand5, 
-    Brand6, Brand7, Brand8, Brand9, Brand10, Brand11
+    Brand1,
+    Brand2,
+    Brand3,
+    Brand4,
+    Brand5,
+    Brand6,
+    Brand7,
+    Brand8,
+    Brand9,
+    Brand10,
+    Brand11,
   ];
 
   const allBrands = [...brands, ...brands];
@@ -82,8 +91,12 @@ export default function Brands() {
 
       <style jsx>{`
         @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
         }
         .animate-marquee {
           display: flex;

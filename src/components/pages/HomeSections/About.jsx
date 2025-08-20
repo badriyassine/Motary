@@ -8,17 +8,20 @@ export default function About() {
   const features = [
     {
       title: "Fast & Effortless",
-      description: "Quickly find your dream car with an effortless, fast experience.",
+      description:
+        "Quickly find your dream car with an effortless, fast experience.",
       image: CarIcon,
     },
     {
       title: "Trusted Seller",
-      description: "Buy with confidence knowing every car comes directly from a trusted source — me.",
+      description:
+        "Buy with confidence knowing every car comes directly from a trusted source — me.",
       image: TrustIcon,
     },
     {
       title: "Easy-to-Use",
-      description: "Easy-to-use interface for simple browsing, listing, and buying.",
+      description:
+        "Easy-to-use interface for simple browsing, listing, and buying.",
       image: EasyIcon,
     },
   ];
