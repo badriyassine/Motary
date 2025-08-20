@@ -1,48 +1,42 @@
-import { motion } from "framer-motion";
-
-const brands = [
-  { name: "Toyota", logo: "/brands/toyota.svg" },
-  { name: "BMW", logo: "/brands/bmw.svg" },
-  { name: "Mercedes", logo: "/brands/mercedes.svg" },
-  { name: "Audi", logo: "/brands/audi.svg" },
-  { name: "Nissan", logo: "/brands/nissan.svg" },
-  { name: "Kia", logo: "/brands/kia.svg" },
-];
-
-// Duplicate the array to make infinite loop smooth
-const logos = [...brands, ...brands, ...brands];
+import React from "react";
+import Brand1 from "../../../assets/brand1.png"; // replace with your brand logos
+import Brand2 from "../../../assets/brand2.png";
+import Brand3 from "../../../assets/brand3.png";
+import Brand4 from "../../../assets/brand4.png";
+import Brand5 from "../../../assets/brand5.png";
 
 export default function Brands() {
-  return (
-    <section className="py-16 bg-gray-50 overflow-hidden">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-10">
-        Trusted by Leading Car Brands
-      </h2>
+  const brands = [Brand1, Brand2, Brand3, Brand4, Brand5, Brand1, Brand2]; // repeated for smooth loop
 
+  return (
+    <section className="w-full bg-[#f6f7f9] py-20 overflow-hidden">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold text-[#171b25]">Our Trusted Brands</h2>
+        <p className="text-gray-600 mt-2">We work with the most renowned car brands in the industry</p>
+      </div>
+
+      {/* Scrolling logos */}
       <div className="relative w-full overflow-hidden">
-        <motion.div
-          className="flex gap-12"
-          animate={{ x: ["0%", "-100%"] }}
-          transition={{
-            repeat: Infinity,
-            ease: "linear",
-            duration: 20, // speed (lower = faster)
-          }}
-        >
-          {logos.map((brand, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-center bg-white rounded-2xl shadow-md p-6 min-w-[150px]"
-            >
-              <img
-                src={brand.logo}
-                alt={brand.name}
-                className="h-12 object-contain"
-              />
+        <div className="flex animate-marquee gap-16">
+          {brands.map((brand, idx) => (
+            <div key={idx} className="flex-shrink-0">
+              <img src={brand} alt={`Brand ${idx + 1}`} className="h-20 w-auto object-contain" />
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes marquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          display: flex;
+          width: max-content;
+          animation: marquee 20s linear infinite;
+        }
+      `}</style>
     </section>
   );
 }

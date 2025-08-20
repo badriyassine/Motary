@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Logo from "../../assets/Logo (2).png"; // import the image
+import Logo from "../../assets/logo/Logo (2).png"; // import the image
 
 export default function Header() {
   const [active, setActive] = useState("Home");
@@ -7,7 +7,7 @@ export default function Header() {
   const navItems = ["Home", "Cars", "Exclusive", "Support", "Contact"];
 
   return (
-    <header className="w-full bg-[#f6f7f9] h-16 flex items-center justify-between px-52">
+    <header className="w-full sticky top-0 z-50 bg-[#f6f7f9] h-16 flex items-center justify-between px-52">
       {/* Left: Logo */}
       <div className="flex items-center">
         <img

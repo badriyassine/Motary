@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Background from "../../../assets/THE WIND IS.png"; // replace with your image path
+import Background from "../../../assets/intro/THE WIND IS.png"; // replace with your image path
 
 export default function Intro() {
   const [animate, setAnimate] = useState(false);
