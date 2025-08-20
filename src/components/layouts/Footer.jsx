@@ -1,5 +1,5 @@
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
-import Logo from "../../assets/logo/Logo (2).png";
+import Logo from "../../assets/logo/FooterLogo.png";
 
 export default function Footer() {
   return (
@@ -8,7 +8,7 @@ export default function Footer() {
         
         {/* Logo & Description */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <img src={Logo} alt="Motary Logo" className="h-14 w-auto mb-4" />
+          <img src={Logo} alt="Motary Logo" className="h-20 w-auto mb-4" />
           <p className="text-sm max-w-[250px]">
             Motary is a modern car marketplace built for speed, trust, and simplicity — where buying or listing your car is effortless.
           </p>
@@ -53,7 +53,7 @@ export default function Footer() {
       </div>
 
       {/* Footer bottom */}
-      <div className="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-gray-500">
+      <div className="border-t border-[#e35b25] mt-10 pt-6 text-center text-sm text-gray-500">
         &copy; {new Date().getFullYear()} Motary. All rights reserved.
       </div>
     </footer>
