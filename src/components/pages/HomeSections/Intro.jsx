@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Background from "../../../assets/intro/THE WIND IS.png"; // replace with your image path
+import Background from "../../../assets/intro/THE WIND IS.png";
 
 export default function Intro() {
   const [animate, setAnimate] = useState(false);
@@ -30,7 +30,10 @@ export default function Intro() {
             animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
           }`}
         >
-          Motary is a modern car marketplace built for speed, trust, and simplicity — where buying your car feels effortless and secure. Browse exclusive collections, get expert support, and find the perfect car that suits your style and needs.
+          Motary is a modern car marketplace built for speed, trust, and
+          simplicity — where buying your car feels effortless and secure. Browse
+          exclusive collections, get expert support, and find the perfect car
+          that suits your style and needs.
         </p>
 
         {/* Button */}
@@ -45,4 +48,3 @@ export default function Intro() {
     </section>
   );
 }
-
