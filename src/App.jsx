@@ -5,7 +5,7 @@ import Home from './components/pages/Home'
 
 const App = () => {
   return (
-    <div>
+    <div className="bg-[#f6f7f9] min-h-screen">
       <TopHeader />
       <Header />
       <Home />
@@ -14,3 +14,4 @@ const App = () => {
 }
 
 export default App
+
