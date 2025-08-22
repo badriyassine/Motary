@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo/Logo (2).png";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaTachometerAlt } from "react-icons/fa";
 
 interface User {
   firstName: string;
   lastName: string;
   email: string;
+  role?: string; // add role
 }
 
 const Header: React.FC = () => {
@@ -15,7 +16,6 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Example: Get user from localStorage after login/register
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
@@ -24,6 +24,11 @@ const Header: React.FC = () => {
     navigate("/profile");
   };
 
+  const handleDashboardClick = () => {
+    navigate("/dashboard"); // admin dashboard page
+  };
+
+  // Nav items for normal users
   const navItems: { name: string; path: string }[] = [
     { name: "Home", path: "/" },
     { name: "Exclusive", path: "/exclusive" },
@@ -39,40 +44,52 @@ const Header: React.FC = () => {
         <img src={Logo} alt="Motary Logo" className="h-14 w-auto" />
       </div>
 
-      {/* Navigation */}
-      <nav className="flex items-center ml-12 gap-8 text-[#171b25] font-medium">
-        {navItems.map((item) => (
-          <Link
-            key={item.name}
-            to={item.path}
-            onClick={() => setActive(item.name)}
-            className={`relative transition-colors duration-300 ${
-              active === item.name ? "text-[#e35b25]" : "hover:text-[#e35b25]"
-            }`}
-          >
-            {item.name}
-            <span
-              className={`absolute left-0 -bottom-1 h-[2px] w-full bg-[#e35b25] transition-all duration-300 ${
-                active === item.name
-                  ? "scale-x-100"
-                  : "scale-x-0 group-hover:scale-x-100"
+      {/* Navigation: show only for non-admin */}
+      {user?.role !== "admin" && (
+        <nav className="flex items-center ml-12 gap-8 text-[#171b25] font-medium">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              onClick={() => setActive(item.name)}
+              className={`relative transition-colors duration-300 ${
+                active === item.name ? "text-[#e35b25]" : "hover:text-[#e35b25]"
               }`}
-              style={{ transformOrigin: "left" }}
-            ></span>
-          </Link>
-        ))}
-      </nav>
+            >
+              {item.name}
+              <span
+                className={`absolute left-0 -bottom-1 h-[2px] w-full bg-[#e35b25] transition-all duration-300 ${
+                  active === item.name ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                }`}
+                style={{ transformOrigin: "left" }}
+              ></span>
+            </Link>
+          ))}
+        </nav>
+      )}
 
-      {/* Buttons / Profile */}
-      <div className="flex items-center gap-2">
+      {/* Buttons / Profile / Dashboard */}
+      <div className="flex items-center gap-4">
         {user ? (
-          <button
-            onClick={handleProfileClick}
-            className="flex items-center gap-1 text-[#e35b25] hover:text-[#c64a1e] transition-colors"
-          >
-            <FaUserCircle className="text-2xl" />
-            <span className="hidden md:inline">{user.firstName}</span>
-          </button>
+          <>
+            {user.role === "admin" && (
+              <button
+                onClick={handleDashboardClick}
+                className="flex items-center gap-1 px-3 py-1 border border-[#e35b25] text-[#e35b25] rounded-md hover:bg-[#e35b25] hover:text-white transition-colors"
+              >
+                <FaTachometerAlt />
+                <span>Dashboard</span>
+              </button>
+            )}
+
+            <button
+              onClick={handleProfileClick}
+              className="flex items-center gap-1 text-[#e35b25] hover:text-[#c64a1e] transition-colors"
+            >
+              <FaUserCircle className="text-2xl" />
+              <span className="hidden md:inline">{user.firstName}</span>
+            </button>
+          </>
         ) : (
           <>
             <Link
@@ -95,6 +112,8 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+
+
 
 
 
