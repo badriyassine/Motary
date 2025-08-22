@@ -5,9 +5,7 @@ import { FaUserCircle, FaTachometerAlt } from "react-icons/fa";
 
 interface User {
   firstName: string;
-  lastName: string;
-  email: string;
-  role?: string; // add role
+  role?: string;
 }
 
 const Header: React.FC = () => {
@@ -15,21 +13,41 @@ const Header: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
+  // Function to load user from localStorage & backend
+  const loadUser = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return setUser(null);
+
+    fetch("http://localhost:5000/api/auth/profile", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setUser(data.user))
+      .catch(() => {
+        localStorage.removeItem("token");
+        setUser(null);
+      });
+  };
+
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
-  }, []);
+    loadUser();
 
-  const handleProfileClick = () => {
-    navigate("/profile");
-  };
+    // Listen for login/register events in localStorage
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "token") {
+        loadUser();
+        navigate("/"); // redirect to home automatically
+      }
+    };
+    window.addEventListener("storage", handleStorage);
 
-  const handleDashboardClick = () => {
-    navigate("/dashboard"); // admin dashboard page
-  };
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [navigate]);
 
-  // Nav items for normal users
-  const navItems: { name: string; path: string }[] = [
+  const handleProfileClick = () => navigate("/profile");
+  const handleDashboardClick = () => navigate("/dashboard");
+
+  const navItems = [
     { name: "Home", path: "/" },
     { name: "Exclusive", path: "/exclusive" },
     { name: "Cars", path: "/cars" },
@@ -39,12 +57,11 @@ const Header: React.FC = () => {
 
   return (
     <header className="w-full sticky top-0 z-50 bg-[#f6f7f9] h-16 flex items-center justify-between px-10 md:px-20 lg:px-52">
-      {/* Logo */}
       <div className="flex items-center">
         <img src={Logo} alt="Motary Logo" className="h-14 w-auto" />
       </div>
 
-      {/* Navigation: show only for non-admin */}
+      {/* Navigation links only for non-admin */}
       {user?.role !== "admin" && (
         <nav className="flex items-center ml-12 gap-8 text-[#171b25] font-medium">
           {navItems.map((item) => (
@@ -68,7 +85,7 @@ const Header: React.FC = () => {
         </nav>
       )}
 
-      {/* Buttons / Profile / Dashboard */}
+      {/* Right buttons */}
       <div className="flex items-center gap-4">
         {user ? (
           <>
@@ -112,6 +129,9 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+
+
+
 
 
 

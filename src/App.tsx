@@ -11,6 +11,8 @@ import Contact from "./components/pages/Contact";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Profile from "./components/pages/Profile"; 
+import AdminDashboard from "./components/admin/AdminDashboard";
+
 
 // Map route paths to document titles
 const titles: Record<string, string> = {
@@ -64,7 +66,8 @@ const App: React.FC = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} /> {/* <- Add Profile route */}
+            <Route path="/profile" element={<Profile />} /> 
+            <Route path="/dashboard" element={<AdminDashboard />} />
           </Routes>
         </main>
         <Footer />

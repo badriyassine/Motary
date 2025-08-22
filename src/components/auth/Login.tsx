@@ -2,26 +2,39 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { loginUser, User } from "../../api/api";
 import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login: React.FC = () => {
   const [form, setForm] = useState({ email: "", password: "" });
-  const [errors, setErrors] = useState({ email: "", password: "" }); // <- error state
+  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" }); // clear error on change
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({ email: "", password: "" }); // reset errors
+    setErrors({ email: "", password: "" });
 
     try {
       const res = await loginUser(form);
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user as User));
-      navigate("/"); 
+
+      setSuccess(true); // show success overlay
+
+      setTimeout(() => {
+        if (res.data.user.role === "admin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
+      }, 1500);
     } catch (err: any) {
       const msg = err.response?.data?.message || "Login failed";
       if (msg.toLowerCase().includes("email")) {
@@ -35,7 +48,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <section className="w-full bg-[#f6f7f9] py-28 px-4 flex justify-center">
+    <section className="w-full bg-[#f6f7f9] py-28 px-4 flex justify-center relative">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -59,18 +72,25 @@ const Login: React.FC = () => {
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
 
-          <div className="flex flex-col">
+          <div className="relative flex flex-col">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
               value={form.password}
               onChange={handleChange}
               className={`border rounded-md px-4 py-2 focus:outline-none focus:ring-2 ${
                 errors.password ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-[#e35b25]"
-              }`}
+              } pr-10`}
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
 
@@ -91,11 +111,27 @@ const Login: React.FC = () => {
           </Link>
         </div>
       </motion.div>
+
+      {success && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+        >
+          <div className="bg-green-500 text-white px-8 py-6 rounded-xl shadow-lg text-center text-xl font-semibold">
+            Login Successful! Redirecting...
+          </div>
+        </motion.div>
+      )}
     </section>
   );
 };
 
 export default Login;
+
+
 
 
 

@@ -14,7 +14,7 @@ import {
   FaExclamationCircle,
   FaCar,
 } from "react-icons/fa";
-import { getCars, Car as ApiCar } from "../../api/api"; // import API types & function
+import { getCars, Car as ApiCar } from "../../api/api";
 
 interface Car extends ApiCar {
   gearbox?: string;
@@ -56,7 +56,6 @@ const Cars: React.FC = () => {
   const [bigImageIndex, setBigImageIndex] = useState<number>(0);
   const [showBigImage, setShowBigImage] = useState<boolean>(false);
 
-  // Fetch cars from backend
   useEffect(() => {
     const fetchCars = async () => {
       try {
@@ -100,7 +99,6 @@ const Cars: React.FC = () => {
 
   return (
     <section className="w-full bg-[#f6f7f9] py-28 px-10">
-      {/* Title & Categories */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -129,7 +127,6 @@ const Cars: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Cars Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {filteredCars.map((car, idx) => {
           const activeIndex = activeImages[idx] || 0;
@@ -169,7 +166,7 @@ const Cars: React.FC = () => {
                       {fuelIcons[car.fuel]} {car.fuel}
                     </div>
                   )}
-                  {car.doors && (
+                  {car.doors !== undefined && (
                     <div className="flex items-center gap-1">
                       <FaDoorOpen /> {car.doors} Doors
                     </div>
@@ -231,7 +228,6 @@ const Cars: React.FC = () => {
             </button>
             <h3 className="text-3xl font-bold text-[#171b25] mb-2">{selectedCar.name}</h3>
 
-            {/* Thumbnails */}
             <div className="flex gap-2 overflow-x-auto mb-4">
               {selectedCar.images?.map((img, i) => (
                 <img
@@ -244,7 +240,6 @@ const Cars: React.FC = () => {
               ))}
             </div>
 
-            {/* Big Image View */}
             {showBigImage && (
               <div className="relative flex items-center justify-center">
                 <button
@@ -282,4 +277,5 @@ const Cars: React.FC = () => {
 };
 
 export default Cars;
+
 
