@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo/Logo (2).png";
 import { FaUserCircle, FaTachometerAlt } from "react-icons/fa";
 
@@ -9,11 +9,25 @@ interface User {
 }
 
 const Header: React.FC = () => {
+  const location = useLocation(); // <-- get current URL path
+  const navigate = useNavigate();
   const [active, setActive] = useState<string>("Home");
   const [user, setUser] = useState<User | null>(null);
-  const navigate = useNavigate();
 
-  // Function to load user from localStorage & backend
+  const navItems = [
+    { name: "Home", path: "/" },
+    { name: "Exclusive", path: "/exclusive" },
+    { name: "Cars", path: "/cars" },
+    { name: "Support", path: "/support" },
+    { name: "Contact", path: "/contact" },
+  ];
+
+  // Update active link based on URL
+  useEffect(() => {
+    const current = navItems.find(item => item.path === location.pathname);
+    if (current) setActive(current.name);
+  }, [location.pathname]);
+
   const loadUser = () => {
     const token = localStorage.getItem("token");
     if (!token) return setUser(null);
@@ -32,28 +46,18 @@ const Header: React.FC = () => {
   useEffect(() => {
     loadUser();
 
-    // Listen for login/register events in localStorage
     const handleStorage = (e: StorageEvent) => {
       if (e.key === "token") {
         loadUser();
-        navigate("/"); // redirect to home automatically
+        navigate("/");
       }
     };
     window.addEventListener("storage", handleStorage);
-
     return () => window.removeEventListener("storage", handleStorage);
   }, [navigate]);
 
   const handleProfileClick = () => navigate("/profile");
   const handleDashboardClick = () => navigate("/dashboard");
-
-  const navItems = [
-    { name: "Home", path: "/" },
-    { name: "Exclusive", path: "/exclusive" },
-    { name: "Cars", path: "/cars" },
-    { name: "Support", path: "/support" },
-    { name: "Contact", path: "/contact" },
-  ];
 
   return (
     <header className="w-full sticky top-0 z-50 bg-[#f6f7f9] h-16 flex items-center justify-between px-10 md:px-20 lg:px-52">
@@ -61,7 +65,6 @@ const Header: React.FC = () => {
         <img src={Logo} alt="Motary Logo" className="h-14 w-auto" />
       </div>
 
-      {/* Navigation links only for non-admin */}
       {user?.role !== "admin" && (
         <nav className="flex items-center ml-12 gap-8 text-[#171b25] font-medium">
           {navItems.map((item) => (
@@ -85,7 +88,6 @@ const Header: React.FC = () => {
         </nav>
       )}
 
-      {/* Right buttons */}
       <div className="flex items-center gap-4">
         {user ? (
           <>
@@ -129,6 +131,7 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+
 
 
 

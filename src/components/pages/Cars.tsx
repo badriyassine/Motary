@@ -26,6 +26,8 @@ interface Car extends ApiCar {
   year?: number;
 }
 
+const BASE_IMAGE_URL = "http://localhost:5000"; // Backend URL
+
 const conditionIcons = {
   New: <FaCheckCircle className="text-green-500 inline mr-2" />,
   Old: <FaExclamationCircle className="text-yellow-500 inline mr-2" />,
@@ -46,7 +48,15 @@ const fuelIcons: Record<string, JSX.Element> = {
   Electric: <FaCar />,
 };
 
-const categories = ["All", "SUV", "Sport", "Sedan", "Economic", "Luxury", "Electric"];
+const categories = [
+  "All",
+  "SUV",
+  "Sport",
+  "Sedan",
+  "Economic",
+  "Luxury",
+  "Electric",
+];
 
 const Cars: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -69,12 +79,17 @@ const Cars: React.FC = () => {
   }, []);
 
   const filteredCars =
-    activeCategory === "All" ? cars : cars.filter((car) => car.type === activeCategory);
+    activeCategory === "All"
+      ? cars
+      : cars.filter((car) => car.type === activeCategory);
 
   const handleNextImage = (idx: number, car: Car) => {
     setActiveImages((prev) => ({
       ...prev,
-      [idx]: (prev[idx] || 0) + 1 >= (car.images?.length || 1) ? 0 : (prev[idx] || 0) + 1,
+      [idx]:
+        (prev[idx] || 0) + 1 >= (car.images?.length || 1)
+          ? 0
+          : (prev[idx] || 0) + 1,
     }));
   };
 
@@ -105,7 +120,9 @@ const Cars: React.FC = () => {
         transition={{ duration: 0.8 }}
         className="text-center mb-8"
       >
-        <h2 className="text-5xl font-bold text-[#171b25] mb-2">Our Cars Collection</h2>
+        <h2 className="text-5xl font-bold text-[#171b25] mb-2">
+          Our Cars Collection
+        </h2>
         <p className="text-gray-600 text-lg mb-4">
           Explore our exclusive range of cars – find your dream ride today.
         </p>
@@ -130,6 +147,14 @@ const Cars: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {filteredCars.map((car, idx) => {
           const activeIndex = activeImages[idx] || 0;
+
+          // --- Truncate description if long ---
+          const maxLength = 100;
+          const isLongDescription = car.description.length > maxLength;
+          const shortDescription = isLongDescription
+            ? car.description.slice(0, maxLength) + "..."
+            : car.description;
+
           return (
             <motion.div
               key={car._id}
@@ -141,7 +166,11 @@ const Cars: React.FC = () => {
             >
               <div className="relative">
                 <img
-                  src={car.images?.[activeIndex] || ""}
+                  src={
+                    car.images?.[activeIndex]
+                      ? `${BASE_IMAGE_URL}${car.images[activeIndex]}`
+                      : ""
+                  }
                   alt={car.name}
                   className="h-64 md:h-72 lg:h-80 w-full object-cover cursor-pointer"
                   onClick={() => handleNextImage(idx, car)}
@@ -152,8 +181,21 @@ const Cars: React.FC = () => {
               </div>
 
               <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-2xl font-semibold text-[#171b25] mb-2">{car.name}</h3>
-                <p className="text-gray-600 mb-4">{car.description}</p>
+                <h3 className="text-2xl font-semibold text-[#171b25] mb-2">
+                  {car.name}
+                </h3>
+
+                <p className="text-gray-600 mb-4">
+                  {shortDescription}
+                  {isLongDescription && (
+                    <button
+                      onClick={() => setSelectedCar(car)}
+                      className="text-[#e35b25] ml-2 underline hover:text-[#d14c1d] transition"
+                    >
+                      See More
+                    </button>
+                  )}
+                </p>
 
                 <div className="flex flex-wrap gap-3 text-gray-700 text-sm mb-4">
                   {car.gearbox && (
@@ -188,7 +230,9 @@ const Cars: React.FC = () => {
                   )}
                   {car.condition && (
                     <div className="flex items-center gap-1">
-                      {conditionIcons[car.condition] || <FaCar className="inline mr-2" />}
+                      {conditionIcons[car.condition] || (
+                        <FaCar className="inline mr-2" />
+                      )}
                       {car.condition}
                     </div>
                   )}
@@ -198,12 +242,14 @@ const Cars: React.FC = () => {
                   <button className="bg-[#e35b25] text-white px-4 py-2 rounded-md hover:bg-[#d14c1d] transition">
                     Buy Now
                   </button>
-                  <button
-                    onClick={() => setSelectedCar(car)}
-                    className="border border-[#e35b25] text-[#e35b25] px-4 py-2 rounded-md hover:bg-[#e35b25] hover:text-white transition"
-                  >
-                    See More
-                  </button>
+                  {isLongDescription && (
+                    <button
+                      onClick={() => setSelectedCar(car)}
+                      className="border border-[#e35b25] text-[#e35b25] px-4 py-2 rounded-md hover:bg-[#e35b25] hover:text-white transition"
+                    >
+                      See More
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -226,13 +272,16 @@ const Cars: React.FC = () => {
             >
               &times;
             </button>
-            <h3 className="text-3xl font-bold text-[#171b25] mb-2">{selectedCar.name}</h3>
+
+            <h3 className="text-3xl font-bold text-[#171b25] mb-2">
+              {selectedCar.name}
+            </h3>
 
             <div className="flex gap-2 overflow-x-auto mb-4">
               {selectedCar.images?.map((img, i) => (
                 <img
                   key={i}
-                  src={img}
+                  src={`${BASE_IMAGE_URL}${img}`}
                   alt={`${selectedCar.name}-${i}`}
                   className="h-24 w-auto object-cover rounded cursor-pointer border-2 border-transparent hover:border-[#e35b25]"
                   onClick={() => openBigImage(i)}
@@ -249,7 +298,11 @@ const Cars: React.FC = () => {
                   <FaArrowLeft className="text-[#e35b25]" />
                 </button>
                 <img
-                  src={selectedCar.images?.[bigImageIndex] || ""}
+                  src={
+                    selectedCar.images?.[bigImageIndex]
+                      ? `${BASE_IMAGE_URL}${selectedCar.images[bigImageIndex]}`
+                      : ""
+                  }
                   alt="big"
                   className="max-h-[500px] w-auto object-contain rounded"
                 />
@@ -268,7 +321,48 @@ const Cars: React.FC = () => {
               </div>
             )}
 
-            <p className="text-gray-700 mb-4">{selectedCar.description}</p>
+            <div className="flex flex-wrap gap-4 text-gray-700 text-sm">
+              {selectedCar.gearbox && (
+                <div className="flex items-center gap-1">
+                  <FaCogs /> {selectedCar.gearbox}
+                </div>
+              )}
+              {selectedCar.fuel && (
+                <div className="flex items-center gap-1">
+                  {fuelIcons[selectedCar.fuel]} {selectedCar.fuel}
+                </div>
+              )}
+              {selectedCar.doors !== undefined && (
+                <div className="flex items-center gap-1">
+                  <FaDoorOpen /> {selectedCar.doors} Doors
+                </div>
+              )}
+              {selectedCar.type && (
+                <div className="flex items-center gap-1">
+                  {typeIcons[selectedCar.type] || <FaCar />} {selectedCar.type}
+                </div>
+              )}
+              {selectedCar.year && (
+                <div className="flex items-center gap-1">
+                  <FaCalendarAlt /> {selectedCar.year}
+                </div>
+              )}
+              {selectedCar.fullOptions !== undefined && (
+                <div className="flex items-center gap-1">
+                  <FaStar /> {selectedCar.fullOptions ? "Full Options" : "Standard"}
+                </div>
+              )}
+              {selectedCar.condition && (
+                <div className="flex items-center gap-1">
+                  {conditionIcons[selectedCar.condition] || (
+                    <FaCar className="inline mr-2" />
+                  )}
+                  {selectedCar.condition}
+                </div>
+              )}
+            </div>
+
+            <p className="text-gray-700 mt-4">{selectedCar.description}</p>
           </motion.div>
         </div>
       )}
@@ -277,5 +371,4 @@ const Cars: React.FC = () => {
 };
 
 export default Cars;
-
 
