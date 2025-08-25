@@ -6,10 +6,11 @@ const API = axios.create({
 });
 
 // Add JWT token automatically if exists
+
 API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token"); // ✅ your token exists
   if (token && req.headers) {
-    req.headers.Authorization = `Bearer ${token}`;
+    req.headers["Authorization"] = `Bearer ${token}`; // must use brackets syntax
   }
   return req;
 });
