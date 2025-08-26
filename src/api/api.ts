@@ -6,11 +6,10 @@ const API = axios.create({
 });
 
 // Add JWT token automatically if exists
-
 API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token"); // ✅ your token exists
+  const token = localStorage.getItem("token");
   if (token && req.headers) {
-    req.headers["Authorization"] = `Bearer ${token}`; // must use brackets syntax
+    req.headers["Authorization"] = `Bearer ${token}`;
   }
   return req;
 });
@@ -28,6 +27,14 @@ export interface Car {
   name: string;
   description: string;
   price: number;
+  gearbox?: string;
+  doors?: number;
+  fullOptions?: boolean;
+  inStock?: boolean;
+  condition?: "New" | "Old";
+  type?: "SUV" | "Sport" | "Sedan" | "Economic" | "Luxury" | "Electric";
+  fuel?: "Diesel" | "Petrol" | "Electric";
+  year?: number;
   images: string[];
   createdBy?: string;
 }
@@ -65,9 +72,11 @@ export const forgotPassword = (data: { email: string }): Promise<AxiosResponse<{
 // --- Cars ---
 export const getCars = (): Promise<AxiosResponse<Car[]>> => API.get("/cars");
 
-export const addCar = (data: FormData): Promise<AxiosResponse<Car>> => API.post("/cars", data);
+export const addCar = (data: FormData): Promise<AxiosResponse<Car>> =>
+  API.post("/cars", data, { headers: { "Content-Type": "multipart/form-data" } });
 
-export const updateCar = (id: string, data: FormData): Promise<AxiosResponse<Car>> => API.put(`/cars/${id}`, data);
+export const updateCar = (id: string, data: FormData): Promise<AxiosResponse<Car>> =>
+  API.put(`/cars/${id}`, data, { headers: { "Content-Type": "multipart/form-data" } });
 
 export const deleteCar = (id: string): Promise<AxiosResponse<{ message: string }>> => API.delete(`/cars/${id}`);
 
