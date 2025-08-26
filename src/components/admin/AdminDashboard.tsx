@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import {
@@ -41,6 +41,7 @@ const AdminDashboard: React.FC = () => {
     inStock: true,
   });
   const [editingCarId, setEditingCarId] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const fetchCars = async () => {
     try {
@@ -81,14 +82,14 @@ const AdminDashboard: React.FC = () => {
     const formData = new FormData();
     formData.append("name", form.name);
     formData.append("description", form.description);
-    formData.append("price", form.price);
+    formData.append("price", form.price ? String(Number(form.price)) : "");
     formData.append("gearbox", form.gearbox);
-    formData.append("doors", form.doors);
+    formData.append("doors", form.doors ? String(Number(form.doors)) : "");
     formData.append("fullOptions", form.fullOptions ? "true" : "false");
     formData.append("condition", form.condition);
     formData.append("type", form.type);
     formData.append("fuel", form.fuel);
-    formData.append("year", form.year);
+    formData.append("year", form.year ? String(Number(form.year)) : "");
     formData.append("inStock", form.inStock ? "true" : "false");
     form.images.forEach((file) => formData.append("images", file));
 
@@ -115,6 +116,7 @@ const AdminDashboard: React.FC = () => {
         images: [],
       });
       setEditingCarId(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       fetchCars();
     } catch (err) {
       console.error(err);
@@ -127,23 +129,29 @@ const AdminDashboard: React.FC = () => {
     setForm({
       name: car.name,
       description: car.description,
-      price: car.price.toString(),
+      price: car.price?.toString() || "",
       gearbox: car.gearbox || "",
       doors: car.doors?.toString() || "",
       fullOptions: car.fullOptions || false,
-      inStock: car.inStock || true,
+      inStock: car.inStock ?? true,
       condition: car.condition || "New",
       type: car.type || "SUV",
       fuel: car.fuel || "Petrol",
       year: car.year?.toString() || "",
       images: [],
     });
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this car?")) {
-      await deleteCar(id);
-      fetchCars();
+      try {
+        await deleteCar(id);
+        fetchCars();
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete car");
+      }
     }
   };
 
@@ -176,6 +184,7 @@ const AdminDashboard: React.FC = () => {
               onChange={handleChange}
               required
               className="border px-4 py-2 rounded-md"
+              id="car-name"
             />
             <textarea
               name="description"
@@ -184,6 +193,7 @@ const AdminDashboard: React.FC = () => {
               onChange={handleChange}
               required
               className="border px-4 py-2 rounded-md"
+              id="car-description"
             />
             <input
               type="number"
@@ -193,6 +203,7 @@ const AdminDashboard: React.FC = () => {
               onChange={handleChange}
               required
               className="border px-4 py-2 rounded-md"
+              id="car-price"
             />
             <input
               type="text"
@@ -201,6 +212,7 @@ const AdminDashboard: React.FC = () => {
               value={form.gearbox}
               onChange={handleChange}
               className="border px-4 py-2 rounded-md"
+              id="car-gearbox"
             />
             <input
               type="number"
@@ -209,6 +221,7 @@ const AdminDashboard: React.FC = () => {
               value={form.doors}
               onChange={handleChange}
               className="border px-4 py-2 rounded-md"
+              id="car-doors"
             />
             <input
               type="number"
@@ -217,6 +230,7 @@ const AdminDashboard: React.FC = () => {
               value={form.year}
               onChange={handleChange}
               className="border px-4 py-2 rounded-md"
+              id="car-year"
             />
 
             <select
@@ -224,6 +238,7 @@ const AdminDashboard: React.FC = () => {
               value={form.fuel}
               onChange={handleChange}
               className="border px-4 py-2 rounded-md"
+              id="car-fuel"
             >
               {fuelOptions.map((f) => (
                 <option key={f} value={f}>
@@ -237,6 +252,7 @@ const AdminDashboard: React.FC = () => {
               value={form.condition}
               onChange={handleChange}
               className="border px-4 py-2 rounded-md"
+              id="car-condition"
             >
               {conditionOptions.map((c) => (
                 <option key={c} value={c}>
@@ -250,6 +266,7 @@ const AdminDashboard: React.FC = () => {
               value={form.type}
               onChange={handleChange}
               className="border px-4 py-2 rounded-md"
+              id="car-type"
             >
               {typeOptions.map((t) => (
                 <option key={t} value={t}>
@@ -258,31 +275,34 @@ const AdminDashboard: React.FC = () => {
               ))}
             </select>
 
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2" htmlFor="car-fullOptions">
               <input
                 type="checkbox"
                 checked={form.fullOptions}
                 onChange={handleCheckbox}
+                id="car-fullOptions"
               />{" "}
               Full Options
             </label>
-              <input
-                type="file"
-                multiple
-                onChange={handleFiles}
-                className="border px-4 py-2 rounded-md"
-              />
-            <label className="flex items-center gap-2">
+            <input
+              type="file"
+              multiple
+              onChange={handleFiles}
+              className="border px-4 py-2 rounded-md"
+              ref={fileInputRef}
+              id="car-images"
+            />
+            <label className="flex items-center gap-2" htmlFor="car-inStock">
               <input
                 type="checkbox"
                 checked={form.inStock}
                 onChange={(e) =>
                   setForm({ ...form, inStock: e.target.checked })
                 }
+                id="car-inStock"
               />
               In Stock
             </label>
-
 
             <button
               type="submit"
@@ -332,19 +352,21 @@ const AdminDashboard: React.FC = () => {
                     <td>{car.type}</td>
                     <td>{car.fullOptions ? "Yes" : "No"}</td>
                     <td>{car.inStock ? "✅ Yes" : "❌ No"}</td>
-                    <td className="flex justify-center gap-2">
-                      <button
-                        onClick={() => handleEdit(car)}
-                        className="text-blue-500 hover:text-blue-700"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(car._id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <FaTrash />
-                      </button>
+                    <td>
+                      <div className="flex justify-center gap-2">
+                        <button
+                          onClick={() => handleEdit(car)}
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(car._id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
