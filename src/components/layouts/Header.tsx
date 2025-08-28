@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo/Logo (2).png";
-import { FaUserCircle, FaTachometerAlt } from "react-icons/fa";
+import { FaUserCircle, FaTachometerAlt, FaClipboardList, FaSignOutAlt } from "react-icons/fa";
 
 interface User {
   firstName: string;
@@ -9,7 +9,7 @@ interface User {
 }
 
 const Header: React.FC = () => {
-  const location = useLocation(); // <-- get current URL path
+  const location = useLocation();
   const navigate = useNavigate();
   const [active, setActive] = useState<string>("Home");
   const [user, setUser] = useState<User | null>(null);
@@ -22,23 +22,38 @@ const Header: React.FC = () => {
     { name: "Contact", path: "/contact" },
   ];
 
-  // Update active link based on URL
   useEffect(() => {
     const current = navItems.find(item => item.path === location.pathname);
     if (current) setActive(current.name);
   }, [location.pathname]);
 
+  // Load user from localStorage first for instant UI update
   const loadUser = () => {
     const token = localStorage.getItem("token");
-    if (!token) return setUser(null);
+    const localUser = localStorage.getItem("user");
+    if (localUser) {
+      try {
+        setUser(JSON.parse(localUser));
+      } catch {
+        setUser(null);
+      }
+    } else {
+      setUser(null);
+    }
+    if (!token) return;
 
+    // Always fetch latest user from backend
     fetch("http://localhost:5000/api/auth/profile", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
-      .then((data) => setUser(data.user))
+      .then((data) => {
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      })
       .catch(() => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         setUser(null);
       });
   };
@@ -47,7 +62,7 @@ const Header: React.FC = () => {
     loadUser();
 
     const handleStorage = (e: StorageEvent) => {
-      if (e.key === "token") {
+      if (e.key === "token" || e.key === "user") {
         loadUser();
         navigate("/");
       }
@@ -58,6 +73,13 @@ const Header: React.FC = () => {
 
   const handleProfileClick = () => navigate("/profile");
   const handleDashboardClick = () => navigate("/dashboard");
+  const handleOrdersClick = () => navigate("/orders");
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
+  };
 
   return (
     <header className="w-full sticky top-0 z-50 bg-[#f6f7f9] h-16 flex items-center justify-between px-10 md:px-20 lg:px-52">
@@ -65,7 +87,8 @@ const Header: React.FC = () => {
         <img src={Logo} alt="Motary Logo" className="h-14 w-auto" />
       </div>
 
-      {user?.role !== "admin" && (
+      {/* Show nav only if not admin and logged in */}
+      {(!user || user.role !== "admin") && (
         <nav className="flex items-center ml-12 gap-8 text-[#171b25] font-medium">
           {navItems.map((item) => (
             <Link
@@ -89,27 +112,8 @@ const Header: React.FC = () => {
       )}
 
       <div className="flex items-center gap-4">
-        {user ? (
-          <>
-            {user.role === "admin" && (
-              <button
-                onClick={handleDashboardClick}
-                className="flex items-center gap-1 px-3 py-1 border border-[#e35b25] text-[#e35b25] rounded-md hover:bg-[#e35b25] hover:text-white transition-colors"
-              >
-                <FaTachometerAlt />
-                <span>Dashboard</span>
-              </button>
-            )}
-
-            <button
-              onClick={handleProfileClick}
-              className="flex items-center gap-1 text-[#e35b25] hover:text-[#c64a1e] transition-colors"
-            >
-              <FaUserCircle className="text-2xl" />
-              <span className="hidden md:inline">{user.firstName}</span>
-            </button>
-          </>
-        ) : (
+        {!user ? (
+          // Not logged in
           <>
             <Link
               to="/login"
@@ -124,6 +128,40 @@ const Header: React.FC = () => {
               Register
             </Link>
           </>
+        ) : user.role === "admin" ? (
+          // Admin: show 3 buttons, hide nav and profile
+          <>
+            <button
+              onClick={handleDashboardClick}
+              className="flex items-center gap-1 px-3 py-1 border border-[#e35b25] text-[#e35b25] rounded-md hover:bg-[#e35b25] hover:text-white transition-colors"
+            >
+              <FaTachometerAlt />
+              <span>Dashboard</span>
+            </button>
+            <button
+              onClick={handleOrdersClick}
+              className="flex items-center gap-1 px-3 py-1 border border-[#e35b25] text-[#e35b25] rounded-md hover:bg-[#e35b25] hover:text-white transition-colors"
+            >
+              <FaClipboardList />
+              <span>Orders</span>
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-1 px-3 py-1 border border-[#e35b25] text-[#e35b25] rounded-md hover:bg-[#e35b25] hover:text-white transition-colors"
+            >
+              <FaSignOutAlt />
+              <span>Logout</span>
+            </button>
+          </>
+        ) : (
+          // Logged in, not admin: show profile
+          <button
+            onClick={handleProfileClick}
+            className="flex items-center gap-1 text-[#e35b25] hover:text-[#c64a1e] transition-colors"
+          >
+            <FaUserCircle className="text-2xl" />
+            <span className="hidden md:inline">{user.firstName}</span>
+          </button>
         )}
       </div>
     </header>
