@@ -1,12 +1,55 @@
-# React + Vite
+# 🚗 Motary
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Motary** is a car store platform concept designed to showcase vehicles available for sale, with a clean and user-friendly interface.  
+This project is currently **a work in progress** as I continue building new features and refining the design.  
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features (Planned & In Progress)
 
-## Expanding the ESLint configuration
+- Modern and responsive design
+- Car listing with images and details
+- Search and filter functionality
+- User-friendly navigation
+- (Upcoming) Authentication system
+- (Upcoming) Admin dashboard for managing listings
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+## 🛠 Tech Stack
+
+- **Frontend:** React, Vite, TailwindCSS, Framer Motion  
+- **Backend:** Express.js , MongoDB   
+- **Deployment:** (planned)  
+
+
+
+## 🚧 Project Status
+
+This project is **still under development**.  
+I’m actively working on adding more functionality and improving the user experience.  
+
+
+## 📂 Project Structure
+```
+motary/
+ ├── public/            # Static assets (logos, images, etc.)
+ ├── src/               # Source code
+ │   ├── components/    # Reusable UI components
+ │   ├── pages/         # Pages (Home, Cars, Contact...)
+ │   ├── App.jsx        # Main app file
+ │   └── main.jsx       # React DOM rendering
+ ├── package.json
+ └── README.md
+```
+
+
+## 📧 Contact
+
+If you’d like to connect or give feedback:  
+- Email: yassine.badrii18@gmail.com  
+- LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/yassine-badri-0279a7342/)  
+
+
+⭐ Stay tuned — more updates are coming soon!
+
+created by Yassine Badri.
