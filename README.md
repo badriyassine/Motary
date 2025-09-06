@@ -49,6 +49,7 @@ If you’d like to connect or give feedback:
 - Email: yassine.badrii18@gmail.com  
 - LinkedIn: [LinkedIn Profile](https://www.linkedin.com/in/yassine-badri-0279a7342/)  
 
+---
 
 ⭐ Stay tuned — more updates are coming soon!
 
