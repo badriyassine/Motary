@@ -1,4 +1,3 @@
-import React from "react";
 import { motion, Variants } from "framer-motion";
 
 // Import brand logos

@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { FaGift, FaStar, FaClock } from "react-icons/fa";
 

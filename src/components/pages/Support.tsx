@@ -1,4 +1,3 @@
-// Support.tsx
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaHeadset, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";

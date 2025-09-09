@@ -1,4 +1,3 @@
-import React from "react";
 import { motion, Variants } from "framer-motion";
 import Car1 from "../../../assets/Gallary/Bmw.jpg";
 import Car2 from "../../../assets/Gallary/Fiat.jpg";
