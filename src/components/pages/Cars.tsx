@@ -21,7 +21,7 @@ interface Car extends ApiCar {
   doors?: number;
   fullOptions?: boolean;
   condition?: "New" | "Old";
-  type?: string;
+  type?: ApiCar["type"];
   fuel?: "Diesel" | "Petrol" | "Electric";
   year?: number;
 }
@@ -33,7 +33,7 @@ const conditionIcons = {
   Old: <FaExclamationCircle className="text-yellow-500 inline mr-2" />,
 };
 
-const typeIcons: Record<string, JSX.Element> = {
+const typeIcons: Record<string, React.ReactNode> = {
   SUV: <FaCarSide />,
   Sport: <FaRoad />,
   Sedan: <FaCar />,
@@ -42,7 +42,7 @@ const typeIcons: Record<string, JSX.Element> = {
   Electric: <FaCar />,
 };
 
-const fuelIcons: Record<string, JSX.Element> = {
+const fuelIcons: Record<string, React.ReactNode> = {
   Diesel: <FaGasPump />,
   Petrol: <FaGasPump />,
   Electric: <FaCar />,
@@ -187,14 +187,12 @@ const Cars: React.FC = () => {
 
                 <p className="text-gray-600 mb-4">
                   {shortDescription}
-                  {isLongDescription && (
-                    <button
-                      onClick={() => setSelectedCar(car)}
-                      className="text-[#e35b25] ml-2 underline hover:text-[#d14c1d] transition"
-                    >
-                      See More
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setSelectedCar(car)}
+                    className="text-[#e35b25] ml-2 underline hover:text-[#d14c1d] transition"
+                  >
+                    See More
+                  </button>
                 </p>
 
                 <div className="flex flex-wrap gap-3 text-gray-700 text-sm mb-4">
@@ -242,14 +240,12 @@ const Cars: React.FC = () => {
                   <button className="bg-[#e35b25] text-white px-4 py-2 rounded-md hover:bg-[#d14c1d] transition">
                     Buy Now
                   </button>
-                  {isLongDescription && (
-                    <button
-                      onClick={() => setSelectedCar(car)}
-                      className="border border-[#e35b25] text-[#e35b25] px-4 py-2 rounded-md hover:bg-[#e35b25] hover:text-white transition"
-                    >
-                      See More
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setSelectedCar(car)}
+                    className="border border-[#e35b25] text-[#e35b25] px-4 py-2 rounded-md hover:bg-[#e35b25] hover:text-white transition"
+                  >
+                    See More
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -349,7 +345,8 @@ const Cars: React.FC = () => {
               )}
               {selectedCar.fullOptions !== undefined && (
                 <div className="flex items-center gap-1">
-                  <FaStar /> {selectedCar.fullOptions ? "Full Options" : "Standard"}
+                  <FaStar />{" "}
+                  {selectedCar.fullOptions ? "Full Options" : "Standard"}
                 </div>
               )}
               {selectedCar.condition && (
@@ -371,4 +368,3 @@ const Cars: React.FC = () => {
 };
 
 export default Cars;
-
