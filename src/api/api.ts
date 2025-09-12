@@ -7,9 +7,12 @@ const API = axios.create({
 
 // Add JWT token automatically if exists
 API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
-  if (token && req.headers) {
-    req.headers["Authorization"] = `Bearer ${token}`;
+  const isAuthEndpoint = req.url?.startsWith("/auth/") ?? false;
+  if (!isAuthEndpoint) {
+    const token = localStorage.getItem("token");
+    if (token && req.headers) {
+      req.headers["Authorization"] = `Bearer ${token}`;
+    }
   }
   return req;
 });
@@ -60,28 +63,51 @@ export const registerUser = (data: {
   phone: string;
   email: string;
   password: string;
-}): Promise<AxiosResponse<{ message: string }>> => API.post("/auth/register", data);
+}): Promise<AxiosResponse<{ message: string }>> =>
+  API.post("/auth/register", data);
 
-export const loginUser = (data: { email: string; password: string }): Promise<AxiosResponse<{ token: string; user: User }>> =>
+export const loginUser = (data: {
+  email: string;
+  password: string;
+}): Promise<AxiosResponse<{ token: string; user: User }>> =>
   API.post("/auth/login", data);
 
 // --- Forgot Password ---
-export const forgotPassword = (data: { email: string }): Promise<AxiosResponse<{ message: string }>> =>
+export const forgotPassword = (data: {
+  email: string;
+}): Promise<AxiosResponse<{ message: string }>> =>
   API.post("/auth/forgot-password", data);
 
 // --- Cars ---
 export const getCars = (): Promise<AxiosResponse<Car[]>> => API.get("/cars");
 
 export const addCar = (data: FormData): Promise<AxiosResponse<Car>> =>
-  API.post("/cars", data, { headers: { "Content-Type": "multipart/form-data" } });
+  API.post("/cars", data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 
-export const updateCar = (id: string, data: FormData): Promise<AxiosResponse<Car>> =>
-  API.put(`/cars/${id}`, data, { headers: { "Content-Type": "multipart/form-data" } });
+export const updateCar = (
+  id: string,
+  data: FormData
+): Promise<AxiosResponse<Car>> =>
+  API.put(`/cars/${id}`, data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 
-export const deleteCar = (id: string): Promise<AxiosResponse<{ message: string }>> => API.delete(`/cars/${id}`);
+export const deleteCar = (
+  id: string
+): Promise<AxiosResponse<{ message: string }>> => API.delete(`/cars/${id}`);
 
 // --- Orders ---
-export const createOrder = (data: { carId: string; buyerInfo?: { firstName: string; lastName: string; phone: string; email: string } }): Promise<AxiosResponse<Order>> =>
-  API.post("/orders", data);
+export const createOrder = (data: {
+  carId: string;
+  buyerInfo?: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+  };
+}): Promise<AxiosResponse<Order>> => API.post("/orders", data);
 
-export const getOrders = (): Promise<AxiosResponse<Order[]>> => API.get("/orders"); // admin only
+export const getOrders = (): Promise<AxiosResponse<Order[]>> =>
+  API.get("/orders"); // admin only

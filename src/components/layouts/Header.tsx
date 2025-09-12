@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo/Logo (2).png";
-import { FaUserCircle, FaTachometerAlt, FaClipboardList, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaUserCircle,
+  FaTachometerAlt,
+  FaClipboardList,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
 interface User {
   firstName: string;
@@ -23,7 +28,7 @@ const Header: React.FC = () => {
   ];
 
   useEffect(() => {
-    const current = navItems.find(item => item.path === location.pathname);
+    const current = navItems.find((item) => item.path === location.pathname);
     if (current) setActive(current.name);
   }, [location.pathname]);
 
@@ -71,6 +76,11 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("storage", handleStorage);
   }, [navigate]);
 
+  // Refresh user state on route changes (handles post-login navigation in same tab)
+  useEffect(() => {
+    loadUser();
+  }, [location.pathname]);
+
   const handleProfileClick = () => navigate("/profile");
   const handleDashboardClick = () => navigate("/dashboard");
   const handleOrdersClick = () => navigate("/orders");
@@ -102,7 +112,9 @@ const Header: React.FC = () => {
               {item.name}
               <span
                 className={`absolute left-0 -bottom-1 h-[2px] w-full bg-[#e35b25] transition-all duration-300 ${
-                  active === item.name ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  active === item.name
+                    ? "scale-x-100"
+                    : "scale-x-0 group-hover:scale-x-100"
                 }`}
                 style={{ transformOrigin: "left" }}
               ></span>
@@ -129,7 +141,7 @@ const Header: React.FC = () => {
             </Link>
           </>
         ) : user.role === "admin" ? (
-          // Admin: show 3 buttons, hide nav and profile
+          // Admin: show only Dashboard and Orders; hide nav and profile
           <>
             <button
               onClick={handleDashboardClick}
@@ -144,13 +156,6 @@ const Header: React.FC = () => {
             >
               <FaClipboardList />
               <span>Orders</span>
-            </button>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1 px-3 py-1 border border-[#e35b25] text-[#e35b25] rounded-md hover:bg-[#e35b25] hover:text-white transition-colors"
-            >
-              <FaSignOutAlt />
-              <span>Logout</span>
             </button>
           </>
         ) : (
@@ -169,12 +174,3 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-
-
-
-
-
-
-
-
-

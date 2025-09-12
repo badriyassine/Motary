@@ -53,7 +53,8 @@ const Register: React.FC = () => {
     if (!/[0-9]/.test(trimmed.password))
       newErrors.password = "Password must contain a number";
     if (!/[!@#$%^&*]/.test(trimmed.password))
-      newErrors.password = "Password must contain a special character (!@#$%^&*)";
+      newErrors.password =
+        "Password must contain a special character (!@#$%^&*)";
 
     if (trimmed.password !== trimmed.repeatPassword)
       newErrors.repeatPassword = "Passwords do not match";
@@ -85,8 +86,8 @@ const Register: React.FC = () => {
         password: "",
         repeatPassword: "",
       });
-
-      setTimeout(() => navigate("/"), 2000);
+      // Redirect to home after successful registration
+      setTimeout(() => navigate("/"), 1000);
     } catch (err: any) {
       setErrors({ api: err.response?.data?.message || "Registration failed" });
       setTimeout(() => setErrors({}), 3000);
@@ -101,7 +102,9 @@ const Register: React.FC = () => {
         transition={{ duration: 0.6 }}
         className="max-w-md w-full bg-white p-8 rounded-xl shadow-lg"
       >
-        <h2 className="text-4xl font-bold text-[#171b25] mb-6 text-center">Register</h2>
+        <h2 className="text-4xl font-bold text-[#171b25] mb-6 text-center">
+          Register
+        </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* First Name */}
           <div>
@@ -114,7 +117,9 @@ const Register: React.FC = () => {
               className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#e35b25] w-full"
               required
             />
-            {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+            {errors.firstName && (
+              <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+            )}
           </div>
 
           {/* Last Name */}
@@ -128,7 +133,9 @@ const Register: React.FC = () => {
               className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#e35b25] w-full"
               required
             />
-            {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+            {errors.lastName && (
+              <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+            )}
           </div>
 
           {/* Phone */}
@@ -142,7 +149,9 @@ const Register: React.FC = () => {
               className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#e35b25] w-full"
               required
             />
-            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            )}
           </div>
 
           {/* Email */}
@@ -156,7 +165,9 @@ const Register: React.FC = () => {
               className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#e35b25] w-full"
               required
             />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -176,7 +187,9 @@ const Register: React.FC = () => {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
           </div>
 
           {/* Repeat Password */}
@@ -196,7 +209,11 @@ const Register: React.FC = () => {
             >
               {showRepeatPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
-            {errors.repeatPassword && <p className="text-red-500 text-sm mt-1">{errors.repeatPassword}</p>}
+            {errors.repeatPassword && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.repeatPassword}
+              </p>
+            )}
           </div>
 
           <button
@@ -209,10 +226,17 @@ const Register: React.FC = () => {
 
         <div className="mt-4 text-sm text-center text-[#171b25]">
           Already have an account?{" "}
-          <Link to="/login" className="text-[#e35b25] hover:underline transition">Login</Link>
+          <Link
+            to="/login"
+            className="text-[#e35b25] hover:underline transition"
+          >
+            Login
+          </Link>
         </div>
 
-        {errors.api && <p className="text-red-500 text-sm mt-2 text-center">{errors.api}</p>}
+        {errors.api && (
+          <p className="text-red-500 text-sm mt-2 text-center">{errors.api}</p>
+        )}
       </motion.div>
 
       <AnimatePresence>
@@ -233,5 +257,3 @@ const Register: React.FC = () => {
 };
 
 export default Register;
-
-

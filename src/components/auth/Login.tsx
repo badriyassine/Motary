@@ -21,7 +21,11 @@ const Login: React.FC = () => {
     setErrors({ email: "", password: "" });
 
     try {
-      const res = await loginUser(form);
+      const normalized = {
+        email: form.email.trim().toLowerCase(),
+        password: form.password,
+      };
+      const res = await loginUser(normalized);
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user as User));
@@ -36,7 +40,7 @@ const Login: React.FC = () => {
         }
       }, 1500);
     } catch (err: any) {
-      const msg = err.response?.data?.message || "Login failed";
+      const msg = err.response?.data?.message || err.message || "Login failed";
       if (msg.toLowerCase().includes("email")) {
         setErrors({ ...errors, email: msg });
       } else if (msg.toLowerCase().includes("password")) {
@@ -55,7 +59,9 @@ const Login: React.FC = () => {
         transition={{ duration: 0.6 }}
         className="max-w-md w-full bg-white p-8 rounded-xl shadow-lg"
       >
-        <h2 className="text-4xl font-bold text-[#171b25] mb-6 text-center">Login</h2>
+        <h2 className="text-4xl font-bold text-[#171b25] mb-6 text-center">
+          Login
+        </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col">
             <input
@@ -65,11 +71,15 @@ const Login: React.FC = () => {
               value={form.email}
               onChange={handleChange}
               className={`border rounded-md px-4 py-2 focus:outline-none focus:ring-2 ${
-                errors.email ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-[#e35b25]"
+                errors.email
+                  ? "border-red-500 focus:ring-red-400"
+                  : "border-gray-300 focus:ring-[#e35b25]"
               }`}
               required
             />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
           </div>
 
           <div className="relative flex flex-col">
@@ -80,7 +90,9 @@ const Login: React.FC = () => {
               value={form.password}
               onChange={handleChange}
               className={`border rounded-md px-4 py-2 focus:outline-none focus:ring-2 ${
-                errors.password ? "border-red-500 focus:ring-red-400" : "border-gray-300 focus:ring-[#e35b25]"
+                errors.password
+                  ? "border-red-500 focus:ring-red-400"
+                  : "border-gray-300 focus:ring-[#e35b25]"
               } pr-10`}
               required
             />
@@ -91,7 +103,9 @@ const Login: React.FC = () => {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
           </div>
 
           <button
@@ -103,7 +117,10 @@ const Login: React.FC = () => {
         </form>
 
         <div className="mt-4 flex justify-between text-sm text-[#171b25]">
-          <Link to="/forgot-password" className="hover:text-[#e35b25] transition">
+          <Link
+            to="/forgot-password"
+            className="hover:text-[#e35b25] transition"
+          >
             Forgot password?
           </Link>
           <Link to="/register" className="hover:text-[#e35b25] transition">
@@ -130,8 +147,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-
-
-
-
-
