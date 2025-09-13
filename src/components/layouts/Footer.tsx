@@ -9,7 +9,6 @@ import {
 } from "react-icons/fa";
 import Logo from "../../assets/logo/FooterLogo.png";
 
-import React from "react";
 
 const Footer: React.FC = () => {
   return (
