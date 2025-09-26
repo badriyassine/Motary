@@ -476,7 +476,7 @@ const Cars: React.FC = () => {
                         e.stopPropagation();
                         setSelectedCar(car);
                       }}
-                      className="text-[#e35b25] ml-2 underline hover:text-[#d14c1d] transition text-xs sm:text-sm"
+                      className="text-[#e35b25] ml-2 hover:text-[#d14c1d] transition text-xs sm:text-sm"
                     >
                       See More
                     </button>
