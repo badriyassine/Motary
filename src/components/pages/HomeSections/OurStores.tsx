@@ -38,38 +38,38 @@ const stores: Store[] = [
     email: "marrakesh@motary.com",
     img: "/src/assets/stores/merrakch.png",
   },
-      {
+  {
     name: "Motary Agadir",
     address: "789 Suburb Road, Agadir",
     phone: "+212 602 222 222",
     email: "agadir@motary.com",
     img: "/src/assets/stores/agadir.png",
   },
-      {
+  {
     name: "Motary Laayoune",
     address: "789 Suburb Road, Laayoune",
     phone: "+212 602 222 222",
     email: "laayoune@motary.com",
     img: "/src/assets/stores/laayoun.png",
   },
-  
 ];
 
 const OurStores: React.FC = () => {
   return (
-    <section className="py-16 bg-white pb-24">
-      <div className="container mx-auto px-4 ">
+    <section className="py-12 sm:py-16 lg:py-20 bg-white pb-16 sm:pb-20 lg:pb-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
             Our Stores
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Visit our locations across the city to experience our wide range of cars and exclusive services.
+          <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
+            Visit our locations across the city to experience our wide range of
+            cars and exclusive services.
           </p>
         </motion.div>
 
@@ -77,7 +77,7 @@ const OurStores: React.FC = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid md:grid-cols-3 gap-8 justify-center"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 justify-center"
         >
           {stores.map((store, idx) => (
             <motion.div
@@ -87,25 +87,28 @@ const OurStores: React.FC = () => {
                 visible: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.6, delay: idx * 0.2 }}
-              className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 w-[400px] mx-auto md:mx-0"
+              className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 w-full max-w-sm mx-auto"
             >
               <img
                 src={store.img}
                 alt={store.name}
-                className="w-full h-64 object-cover"
+                className="w-full h-48 sm:h-56 lg:h-64 object-cover"
               />
-              <div className="p-6">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-2">
+              <div className="p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800 mb-2">
                   {store.name}
                 </h3>
-                <p className="text-gray-600 flex items-center mb-2">
-                  <FaMapMarkerAlt className="mr-2 text-[#e35b25]" /> {store.address}
+                <p className="text-xs sm:text-sm text-gray-600 flex items-center mb-2">
+                  <FaMapMarkerAlt className="mr-2 text-[#e35b25] flex-shrink-0" />
+                  <span className="truncate">{store.address}</span>
                 </p>
-                <p className="text-gray-600 flex items-center mb-2">
-                  <FaPhoneAlt className="mr-2 text-[#e35b25]" /> {store.phone}
+                <p className="text-xs sm:text-sm text-gray-600 flex items-center mb-2">
+                  <FaPhoneAlt className="mr-2 text-[#e35b25] flex-shrink-0" />
+                  <span className="truncate">{store.phone}</span>
                 </p>
-                <p className="text-gray-600 flex items-center">
-                  <FaEnvelope className="mr-2 text-[#e35b25]" /> {store.email}
+                <p className="text-xs sm:text-sm text-gray-600 flex items-center">
+                  <FaEnvelope className="mr-2 text-[#e35b25] flex-shrink-0" />
+                  <span className="truncate">{store.email}</span>
                 </p>
               </div>
             </motion.div>
@@ -117,5 +120,3 @@ const OurStores: React.FC = () => {
 };
 
 export default OurStores;
-
-

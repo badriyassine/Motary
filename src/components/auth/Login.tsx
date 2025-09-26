@@ -30,6 +30,9 @@ const Login: React.FC = () => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user as User));
 
+      // Dispatch custom event to update header
+      window.dispatchEvent(new CustomEvent("userLogin"));
+
       setSuccess(true); // show success overlay
 
       setTimeout(() => {
@@ -52,12 +55,12 @@ const Login: React.FC = () => {
   };
 
   return (
-    <section className="w-full bg-[#f6f7f9] py-28 px-4 flex justify-center relative">
+    <section className="w-full bg-[#f6f7f9] min-h-screen flex items-center justify-center py-8 px-4 relative">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-md w-full bg-white p-8 rounded-xl shadow-lg"
+        className="max-w-md w-full bg-white p-6 sm:p-8 rounded-xl shadow-lg"
       >
         <h2 className="text-4xl font-bold text-[#171b25] mb-6 text-center">
           Login

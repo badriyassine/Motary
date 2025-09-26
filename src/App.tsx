@@ -1,18 +1,25 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import TopHeader from "./components/layouts/TopHeader";
 import Header from "./components/layouts/Header";
 import Footer from "./components/layouts/Footer";
 import Home from "./components/pages/Home";
 import Cars from "./components/pages/Cars";
-import Exclusive from "./components/pages/Exclusive"; 
+import Exclusive from "./components/pages/Exclusive";
 import Support from "./components/pages/Support";
 import Contact from "./components/pages/Contact";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
-import Profile from "./components/pages/Profile"; 
+import Profile from "./components/pages/Profile";
 import AdminDashboard from "./components/admin/AdminDashboard";
-
+import Orders from "./components/admin/Orders";
+import { NotificationProvider } from "./contexts/NotificationContext";
 
 // Map route paths to document titles
 const titles: Record<string, string> = {
@@ -23,7 +30,7 @@ const titles: Record<string, string> = {
   "/contact": "Contact - Motary Cars",
   "/login": "Login - Motary Cars",
   "/register": "Register - Motary Cars",
-  "/profile": "Profile - Motary Cars", 
+  "/profile": "Profile - Motary Cars",
 };
 
 // Component to update document title
@@ -51,33 +58,42 @@ const ScrollToTop: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <TitleUpdater />
-      <ScrollToTop />
-      <div className="bg-[#f6f7f9] min-h-screen flex flex-col">
-        <TopHeader />
-        <Header />
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/exclusive" element={<Exclusive />} /> 
-            <Route path="/cars" element={<Cars />} />
-            <Route path="/support" element={<Support />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} /> 
-            <Route path="/dashboard" element={<AdminDashboard />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <NotificationProvider>
+      <Router>
+        <TitleUpdater />
+        <ScrollToTop />
+        <div className="bg-[#f6f7f9] min-h-screen flex flex-col">
+          <TopHeader />
+          <Header />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/exclusive" element={<Exclusive />} />
+              <Route path="/cars" element={<Cars />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/dashboard" element={<AdminDashboard />} />
+              <Route path="/dashboard/orders" element={<Orders />} />
+            </Routes>
+          </main>
+          <Footer />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: "#363636",
+                color: "#fff",
+              },
+            }}
+          />
+        </div>
+      </Router>
+    </NotificationProvider>
   );
 };
 
 export default App;
-
-
-
-

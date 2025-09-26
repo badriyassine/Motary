@@ -47,22 +47,25 @@ export default function Brands(): JSX.Element {
   };
 
   return (
-    <section className="w-full bg-white py-20 overflow-hidden">
+    <section className="w-full bg-white py-12 sm:py-16 lg:py-20 overflow-hidden">
       {/* Section title */}
       <motion.div
-        className="text-center mb-12"
+        className="text-center mb-8 sm:mb-12 px-4"
         variants={container}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
         <motion.h2
-          className="text-4xl font-bold text-[#171b25]"
+          className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#171b25]"
           variants={item}
         >
           Our Trusted Brands
         </motion.h2>
-        <motion.p className="text-gray-600 mt-2" variants={item}>
+        <motion.p
+          className="text-sm sm:text-base text-gray-600 mt-2"
+          variants={item}
+        >
           We work with the most renowned car brands in the industry
         </motion.p>
       </motion.div>
@@ -79,13 +82,13 @@ export default function Brands(): JSX.Element {
           {allBrands.map((brand: string, idx: number) => (
             <motion.div
               key={idx}
-              className="flex-shrink-0 px-10"
+              className="flex-shrink-0 px-4 sm:px-6 lg:px-10"
               variants={item}
             >
               <img
                 src={brand}
                 alt={`Brand ${idx + 1}`}
-                className="h-20 w-auto object-contain"
+                className="h-12 sm:h-16 lg:h-20 w-auto object-contain"
               />
             </motion.div>
           ))}
@@ -110,4 +113,3 @@ export default function Brands(): JSX.Element {
     </section>
   );
 }
-

@@ -11,7 +11,8 @@ interface ExclusiveItem {
 const exclusiveData: ExclusiveItem[] = [
   {
     name: "Premium Membership",
-    description: "Get access to VIP deals, priority support, and exclusive content.",
+    description:
+      "Get access to VIP deals, priority support, and exclusive content.",
     icon: <FaStar className="text-[#e35b25]" />,
     available: "Limited",
   },
@@ -23,7 +24,8 @@ const exclusiveData: ExclusiveItem[] = [
   },
   {
     name: "Gift Packages",
-    description: "Exclusive gift packages for loyal customers with premium offers.",
+    description:
+      "Exclusive gift packages for loyal customers with premium offers.",
     icon: <FaGift className="text-[#e35b25]" />,
     available: "Exclusive",
   },
@@ -31,7 +33,7 @@ const exclusiveData: ExclusiveItem[] = [
 
 const Exclusive: React.FC = () => {
   return (
-    <section className="w-full bg-[#f6f7f9] py-28 px-10">
+    <section className="w-full bg-[#f6f7f9] min-h-screen flex flex-col justify-start py-28 px-4 sm:px-6 lg:px-10">
       {/* Title with animation */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
@@ -39,38 +41,44 @@ const Exclusive: React.FC = () => {
         transition={{ duration: 0.8 }}
         className="text-center mb-12"
       >
-        <h2 className="text-5xl font-bold text-[#171b25] mb-4">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#171b25] mb-4">
           Exclusive Offers
         </h2>
         <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-gray-600 text-lg"
+          className="text-gray-600 text-base sm:text-lg"
         >
           Discover our limited edition and VIP offers designed just for you.
         </motion.p>
       </motion.div>
 
       {/* Exclusive cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
         {exclusiveData.map((item, idx) => (
           <motion.div
             key={idx}
-            className="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between hover:shadow-2xl transition-shadow duration-300"
+            className="bg-white rounded-xl shadow-lg p-4 sm:p-6 flex flex-col justify-between hover:shadow-2xl transition-shadow duration-300"
             whileHover={{ scale: 1.03 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: idx * 0.1 }}
           >
-            <div className="flex items-center mb-4 text-4xl">{item.icon}</div>
-            <h3 className="text-2xl font-semibold text-[#171b25] mb-2">
+            <div className="flex items-center mb-3 sm:mb-4 text-3xl sm:text-4xl">
+              {item.icon}
+            </div>
+            <h3 className="text-xl sm:text-2xl font-semibold text-[#171b25] mb-2">
               {item.name}
             </h3>
-            <p className="text-gray-600 mb-4">{item.description}</p>
+            <p className="text-gray-600 mb-4 text-sm sm:text-base">
+              {item.description}
+            </p>
             <div className="flex justify-between items-center mt-auto">
-              <span className="text-[#e35b25] font-semibold">{item.available}</span>
-              <button className="bg-[#e35b25] text-white px-4 py-2 rounded-md hover:bg-[#d14c1d] transition">
+              <span className="text-[#e35b25] font-semibold text-sm sm:text-base">
+                {item.available}
+              </span>
+              <button className="bg-[#e35b25] text-white px-3 sm:px-4 py-2 rounded-md hover:bg-[#d14c1d] transition text-sm sm:text-base">
                 See More
               </button>
             </div>

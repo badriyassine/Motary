@@ -14,12 +14,12 @@ export default function Intro({ onDiscoverMore }: IntroProps): JSX.Element {
 
   return (
     <section
-      className="w-full h-[89.2vh] bg-cover bg-center flex items-start pt-36"
+      className="w-full h-[89.2vh] bg-cover bg-center flex items-start pt-16 sm:pt-24 md:pt-36"
       style={{ backgroundImage: `url(${Background})` }}
     >
-      <div className="max-w-lg ml-52 text-left text-white space-y-6">
+      <div className="max-w-lg mx-4 sm:mx-8 md:ml-12 lg:ml-52 text-left text-white space-y-4 sm:space-y-6">
         <h1
-          className={`text-6xl font-bold transition-all duration-1000 ease-out transform ${
+          className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold transition-all duration-1000 ease-out transform ${
             animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
           }`}
         >
@@ -27,7 +27,7 @@ export default function Intro({ onDiscoverMore }: IntroProps): JSX.Element {
         </h1>
 
         <p
-          className={`text-xl transition-all duration-1000 ease-out delay-200 transform ${
+          className={`text-sm sm:text-base md:text-lg lg:text-xl transition-all duration-1000 ease-out delay-200 transform ${
             animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
           }`}
         >
@@ -39,7 +39,7 @@ export default function Intro({ onDiscoverMore }: IntroProps): JSX.Element {
 
         <button
           onClick={onDiscoverMore}
-          className={`bg-[#e35b25]/80 text-white px-6 py-3 text-lg font-medium transition-all duration-1000 ease-out delay-400 transform hover:bg-[#e35b25] ${
+          className={`bg-[#e35b25]/80 text-white px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base md:text-lg font-medium transition-all duration-1000 ease-out delay-400 transform hover:bg-[#e35b25] ${
             animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
           }`}
         >

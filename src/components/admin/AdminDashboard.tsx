@@ -1,12 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import {
+  FaEdit,
+  FaTrash,
+  FaShoppingCart,
+  FaCar,
+  FaChartBar,
+  FaUsers,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getCars,
   addCar,
   updateCar,
   deleteCar,
   Car as ApiCar,
+  getOrders,
+  Order as ApiOrder,
 } from "../../api/api";
 
 interface Car extends ApiCar {
@@ -25,7 +36,15 @@ const conditionOptions = ["New", "Old"];
 const typeOptions = ["SUV", "Sport", "Sedan", "Economic", "Luxury", "Electric"];
 
 const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [cars, setCars] = useState<Car[]>([]);
+  const [orders, setOrders] = useState<ApiOrder[]>([]);
+  const [stats, setStats] = useState({
+    totalCars: 0,
+    totalOrders: 0,
+    pendingOrders: 0,
+    totalRevenue: 0,
+  });
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -53,9 +72,43 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const fetchOrders = async () => {
+    try {
+      const res = await getOrders();
+      setOrders(res.data);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to fetch orders");
+    }
+  };
+
+  const calculateStats = () => {
+    const totalCars = cars.length;
+    const totalOrders = orders.length;
+    const pendingOrders = orders.filter(
+      (order) => order.status === "pending"
+    ).length;
+    const totalRevenue = orders.reduce(
+      (sum, order) => sum + order.totalPrice,
+      0
+    );
+
+    setStats({
+      totalCars,
+      totalOrders,
+      pendingOrders,
+      totalRevenue,
+    });
+  };
+
   useEffect(() => {
     fetchCars();
+    fetchOrders();
   }, []);
+
+  useEffect(() => {
+    calculateStats();
+  }, [cars, orders]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -118,6 +171,7 @@ const AdminDashboard: React.FC = () => {
       setEditingCarId(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
       fetchCars();
+      fetchOrders();
     } catch (err) {
       console.error(err);
       alert("Failed to save car");
@@ -148,6 +202,7 @@ const AdminDashboard: React.FC = () => {
       try {
         await deleteCar(id);
         fetchCars();
+        fetchOrders();
       } catch (err) {
         console.error(err);
         alert("Failed to delete car");
@@ -155,26 +210,156 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
-    <section className="w-full bg-[#f6f7f9] py-16 px-10 min-h-screen">
+    <section className="w-full bg-[#f6f7f9] py-12 sm:py-16 px-4 sm:px-6 lg:px-10 min-h-screen">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="max-w-6xl mx-auto"
       >
-        <h2 className="text-4xl font-bold text-[#171b25] mb-8 text-center">
-          Admin Dashboard
-        </h2>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 gap-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#171b25]">
+            Admin Dashboard
+          </h2>
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm sm:text-base"
+          >
+            <FaSignOutAlt />
+            Logout
+          </button>
+        </div>
+
+        {/* Dashboard Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white p-4 sm:p-6 rounded-xl shadow-lg"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">
+                  Total Cars
+                </p>
+                <p className="text-xl sm:text-2xl font-bold text-[#171b25]">
+                  {stats.totalCars}
+                </p>
+              </div>
+              <FaCar className="text-2xl sm:text-3xl text-[#e35b25]" />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white p-4 sm:p-6 rounded-xl shadow-lg"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">
+                  Total Orders
+                </p>
+                <p className="text-xl sm:text-2xl font-bold text-[#171b25]">
+                  {stats.totalOrders}
+                </p>
+              </div>
+              <FaShoppingCart className="text-2xl sm:text-3xl text-[#e35b25]" />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white p-4 sm:p-6 rounded-xl shadow-lg"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">
+                  Pending Orders
+                </p>
+                <p className="text-xl sm:text-2xl font-bold text-[#171b25]">
+                  {stats.pendingOrders}
+                </p>
+              </div>
+              <FaChartBar className="text-2xl sm:text-3xl text-yellow-500" />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white p-4 sm:p-6 rounded-xl shadow-lg"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">
+                  Total Revenue
+                </p>
+                <p className="text-xl sm:text-2xl font-bold text-[#171b25]">
+                  ${stats.totalRevenue.toLocaleString()}
+                </p>
+              </div>
+              <FaUsers className="text-2xl sm:text-3xl text-green-500" />
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="bg-white p-4 sm:p-6 rounded-xl shadow-lg mb-8 sm:mb-10"
+        >
+          <h3 className="text-lg sm:text-xl font-semibold text-[#171b25] mb-3 sm:mb-4">
+            Quick Actions
+          </h3>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <Link
+              to="/dashboard/orders"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-[#e35b25] text-white rounded-lg hover:bg-[#d14c1d] transition text-sm sm:text-base"
+            >
+              <FaShoppingCart />
+              Manage Orders
+            </Link>
+            <button
+              onClick={() => {
+                const formElement = document.getElementById("car-form");
+                if (formElement) {
+                  formElement.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm sm:text-base"
+            >
+              <FaCar />
+              Add New Car
+            </button>
+          </div>
+        </motion.div>
 
         {/* Car Form */}
-        <motion.div className="bg-white p-6 rounded-xl shadow-lg mb-10">
-          <h3 className="text-2xl font-semibold text-[#171b25] mb-4 text-center">
+        <motion.div
+          id="car-form"
+          className="bg-white p-4 sm:p-6 rounded-xl shadow-lg mb-8 sm:mb-10"
+        >
+          <h3 className="text-xl sm:text-2xl font-semibold text-[#171b25] mb-4 text-center">
             {editingCarId ? "Edit Car" : "Add New Car"}
           </h3>
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
           >
             <input
               type="text"
@@ -183,7 +368,7 @@ const AdminDashboard: React.FC = () => {
               value={form.name}
               onChange={handleChange}
               required
-              className="border px-4 py-2 rounded-md"
+              className="border px-3 sm:px-4 py-2 rounded-md text-sm sm:text-base"
               id="car-name"
             />
             <textarea
@@ -192,7 +377,7 @@ const AdminDashboard: React.FC = () => {
               value={form.description}
               onChange={handleChange}
               required
-              className="border px-4 py-2 rounded-md"
+              className="border px-3 sm:px-4 py-2 rounded-md text-sm sm:text-base"
               id="car-description"
             />
             <input
@@ -275,7 +460,10 @@ const AdminDashboard: React.FC = () => {
               ))}
             </select>
 
-            <label className="flex items-center gap-2" htmlFor="car-fullOptions">
+            <label
+              className="flex items-center gap-2"
+              htmlFor="car-fullOptions"
+            >
               <input
                 type="checkbox"
                 checked={form.fullOptions}
@@ -306,7 +494,7 @@ const AdminDashboard: React.FC = () => {
 
             <button
               type="submit"
-              className="col-span-full bg-[#e35b25] text-white px-6 py-2 rounded-md hover:bg-[#d14c1d] transition"
+              className="col-span-full bg-[#e35b25] text-white px-4 sm:px-6 py-2 rounded-md hover:bg-[#d14c1d] transition text-sm sm:text-base"
             >
               {editingCarId ? "Update Car" : "Add Car"}
             </button>
@@ -315,54 +503,64 @@ const AdminDashboard: React.FC = () => {
 
         {/* Cars Table */}
         <motion.div>
-          <h3 className="text-2xl font-semibold text-[#171b25] mb-4 text-center">
+          <h3 className="text-xl sm:text-2xl font-semibold text-[#171b25] mb-4 text-center">
             Cars List
           </h3>
           <div className="overflow-x-auto">
-            <table className="w-full table-auto bg-white rounded-xl shadow-lg text-center">
+            <table className="w-full table-auto bg-white rounded-xl shadow-lg text-center text-xs sm:text-sm">
               <thead>
                 <tr className="bg-[#171b25] text-white">
-                  <th>ID</th>
+                  <th className="hidden sm:table-cell">ID</th>
                   <th>Name</th>
-                  <th>Description</th>
+                  <th className="hidden lg:table-cell">Description</th>
                   <th>Price</th>
                   <th>Gearbox</th>
                   <th>Doors</th>
-                  <th>Year</th>
-                  <th>Fuel</th>
-                  <th>Condition</th>
-                  <th>Type</th>
-                  <th>Full Options</th>
-                  <th>In Stock</th>
+                  <th className="hidden md:table-cell">Year</th>
+                  <th className="hidden lg:table-cell">Fuel</th>
+                  <th className="hidden lg:table-cell">Condition</th>
+                  <th className="hidden sm:table-cell">Type</th>
+                  <th className="hidden lg:table-cell">Full Options</th>
+                  <th className="hidden md:table-cell">In Stock</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {cars.map((car) => (
                   <tr key={car._id} className="border-b">
-                    <td>{car._id}</td>
-                    <td>{car.name}</td>
-                    <td>{car.description}</td>
-                    <td>${car.price}</td>
-                    <td>{car.gearbox}</td>
-                    <td>{car.doors}</td>
-                    <td>{car.year}</td>
-                    <td>{car.fuel}</td>
-                    <td>{car.condition}</td>
-                    <td>{car.type}</td>
-                    <td>{car.fullOptions ? "Yes" : "No"}</td>
-                    <td>{car.inStock ? "✅ Yes" : "❌ No"}</td>
+                    <td className="hidden sm:table-cell">{car._id}</td>
+                    <td className="font-medium">{car.name}</td>
+                    <td className="hidden lg:table-cell max-w-xs">
+                      <div className="truncate" title={car.description}>
+                        {car.description}
+                      </div>
+                    </td>
+                    <td className="font-bold text-[#e35b25]">${car.price}</td>
+                    <td>{car.gearbox || "-"}</td>
+                    <td>{car.doors || "-"}</td>
+                    <td className="hidden md:table-cell">{car.year}</td>
+                    <td className="hidden lg:table-cell">{car.fuel}</td>
+                    <td className="hidden lg:table-cell">{car.condition}</td>
+                    <td className="hidden sm:table-cell">{car.type}</td>
+                    <td className="hidden lg:table-cell">
+                      {car.fullOptions ? "Yes" : "No"}
+                    </td>
+                    <td className="hidden md:table-cell">
+                      {car.inStock ? "Yes" : "No"}
+                    </td>
                     <td>
                       <div className="flex justify-center gap-2">
                         <button
                           onClick={() => handleEdit(car)}
-                          className="text-blue-500 hover:text-blue-700"
+                          className="text-blue-500 hover:text-blue-700 p-1"
+                          title="Edit"
                         >
                           <FaEdit />
                         </button>
                         <button
                           onClick={() => handleDelete(car._id)}
-                          className="text-red-500 hover:text-red-700"
+                          className="text-red-500 hover:text-red-700 p-1"
+                          title="Delete"
                         >
                           <FaTrash />
                         </button>
