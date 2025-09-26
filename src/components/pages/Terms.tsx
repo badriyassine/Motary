@@ -14,7 +14,7 @@ const Terms: React.FC = () => {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#171b25] mb-6 sm:mb-8 text-center">
             Terms and Conditions
           </h1>
-          
+
           <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
             <p className="text-sm sm:text-base">
               <strong>Last updated:</strong> {new Date().toLocaleDateString()}
@@ -25,7 +25,10 @@ const Terms: React.FC = () => {
                 1. Acceptance of Terms
               </h2>
               <p className="text-sm sm:text-base leading-relaxed">
-                By accessing and using Motary's services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+                By accessing and using Motary's services, you accept and agree
+                to be bound by the terms and provision of this agreement. If you
+                do not agree to abide by the above, please do not use this
+                service.
               </p>
             </section>
 
@@ -34,7 +37,12 @@ const Terms: React.FC = () => {
                 2. Vehicle Information
               </h2>
               <p className="text-sm sm:text-base leading-relaxed">
-                All vehicle information provided on our platform is accurate to the best of our knowledge. However, we recommend that you inspect the vehicle personally or through a qualified mechanic before making a purchase decision. Motary is not responsible for any discrepancies in vehicle condition that may not be apparent from the provided information.
+                All vehicle information provided on our platform is accurate to
+                the best of our knowledge. However, we recommend that you
+                inspect the vehicle personally or through a qualified mechanic
+                before making a purchase decision. Motary is not responsible for
+                any discrepancies in vehicle condition that may not be apparent
+                from the provided information.
               </p>
             </section>
 
@@ -43,7 +51,11 @@ const Terms: React.FC = () => {
                 3. Pricing and Payment
               </h2>
               <p className="text-sm sm:text-base leading-relaxed">
-                All prices listed are in USD and are subject to change without notice. Final pricing may vary based on negotiations, additional services, or market conditions. Payment terms will be discussed and agreed upon during the purchase process. We reserve the right to refuse service to anyone at any time.
+                All prices listed are in USD and are subject to change without
+                notice. Final pricing may vary based on negotiations, additional
+                services, or market conditions. Payment terms will be discussed
+                and agreed upon during the purchase process. We reserve the
+                right to refuse service to anyone at any time.
               </p>
             </section>
 
@@ -52,7 +64,10 @@ const Terms: React.FC = () => {
                 4. Vehicle Inspection and Test Drive
               </h2>
               <p className="text-sm sm:text-base leading-relaxed">
-                We strongly recommend that all buyers inspect the vehicle and take a test drive before finalizing the purchase. Any issues discovered during inspection or test drive should be discussed with our sales team before proceeding with the transaction.
+                We strongly recommend that all buyers inspect the vehicle and
+                take a test drive before finalizing the purchase. Any issues
+                discovered during inspection or test drive should be discussed
+                with our sales team before proceeding with the transaction.
               </p>
             </section>
 
@@ -61,7 +76,11 @@ const Terms: React.FC = () => {
                 5. Warranty and Returns
               </h2>
               <p className="text-sm sm:text-base leading-relaxed">
-                Vehicle warranties are subject to manufacturer terms and conditions. Motary provides a limited warranty on our services and will work with you to resolve any legitimate concerns. Returns are subject to our return policy and must be initiated within 7 days of purchase.
+                Vehicle warranties are subject to manufacturer terms and
+                conditions. Motary provides a limited warranty on our services
+                and will work with you to resolve any legitimate concerns.
+                Returns are subject to our return policy and must be initiated
+                within 7 days of purchase.
               </p>
             </section>
 
@@ -70,7 +89,10 @@ const Terms: React.FC = () => {
                 6. Privacy and Data Protection
               </h2>
               <p className="text-sm sm:text-base leading-relaxed">
-                We are committed to protecting your privacy. Your personal information will be used solely for the purpose of facilitating your vehicle purchase and will not be shared with third parties without your consent, except as required by law.
+                We are committed to protecting your privacy. Your personal
+                information will be used solely for the purpose of facilitating
+                your vehicle purchase and will not be shared with third parties
+                without your consent, except as required by law.
               </p>
             </section>
 
@@ -79,7 +101,10 @@ const Terms: React.FC = () => {
                 7. Limitation of Liability
               </h2>
               <p className="text-sm sm:text-base leading-relaxed">
-                Motary shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of our services.
+                Motary shall not be liable for any indirect, incidental,
+                special, consequential, or punitive damages, including without
+                limitation, loss of profits, data, use, goodwill, or other
+                intangible losses, resulting from your use of our services.
               </p>
             </section>
 
@@ -88,7 +113,10 @@ const Terms: React.FC = () => {
                 8. Governing Law
               </h2>
               <p className="text-sm sm:text-base leading-relaxed">
-                These terms and conditions are governed by and construed in accordance with the laws of Morocco, and you irrevocably submit to the exclusive jurisdiction of the courts in that state or location.
+                These terms and conditions are governed by and construed in
+                accordance with the laws of Morocco, and you irrevocably submit
+                to the exclusive jurisdiction of the courts in that state or
+                location.
               </p>
             </section>
 
@@ -97,7 +125,8 @@ const Terms: React.FC = () => {
                 9. Contact Information
               </h2>
               <p className="text-sm sm:text-base leading-relaxed">
-                If you have any questions about these Terms and Conditions, please contact us at:
+                If you have any questions about these Terms and Conditions,
+                please contact us at:
                 <br />
                 Email: info@motary.com
                 <br />
@@ -109,7 +138,9 @@ const Terms: React.FC = () => {
 
             <div className="mt-8 p-4 bg-gray-50 rounded-lg">
               <p className="text-sm sm:text-base text-gray-600">
-                <strong>Note:</strong> By proceeding with any purchase through Motary, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.
+                <strong>Note:</strong> By proceeding with any purchase through
+                Motary, you acknowledge that you have read, understood, and
+                agree to be bound by these Terms and Conditions.
               </p>
             </div>
           </div>

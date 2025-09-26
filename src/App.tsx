@@ -19,6 +19,7 @@ import Register from "./components/auth/Register";
 import Profile from "./components/pages/Profile";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import Orders from "./components/admin/Orders";
+import Terms from "./components/pages/Terms";
 import { NotificationProvider } from "./contexts/NotificationContext";
 
 // Map route paths to document titles
@@ -31,6 +32,7 @@ const titles: Record<string, string> = {
   "/login": "Login - Motary Cars",
   "/register": "Register - Motary Cars",
   "/profile": "Profile - Motary Cars",
+  "/terms": "Terms and Conditions - Motary Cars",
 };
 
 // Component to update document title
@@ -75,6 +77,7 @@ const App: React.FC = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/terms" element={<Terms />} />
               <Route path="/dashboard" element={<AdminDashboard />} />
               <Route path="/dashboard/orders" element={<Orders />} />
             </Routes>

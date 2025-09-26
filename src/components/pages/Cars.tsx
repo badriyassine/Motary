@@ -66,6 +66,7 @@ const Cars: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [filteredCars, setFilteredCars] = useState<Car[]>([]);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+  const [orderCar, setOrderCar] = useState<Car | null>(null);
   const [activeImages, setActiveImages] = useState<Record<number, number>>({});
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [bigImageIndex, setBigImageIndex] = useState<number>(0);
@@ -87,6 +88,8 @@ const Cars: React.FC = () => {
     phone: "",
     email: "",
   });
+  const [discussPrice, setDiscussPrice] = useState<boolean>(false);
+  const [acceptTerms, setAcceptTerms] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -191,17 +194,26 @@ const Cars: React.FC = () => {
 
   const handleOrderSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedCar) return;
+    if (!orderCar) return;
+
+    // Validate terms acceptance
+    if (!acceptTerms) {
+      toast.error("Please accept the Terms and Conditions to continue");
+      return;
+    }
 
     try {
       setLoading(true);
       await createOrder({
-        carId: selectedCar._id,
+        carId: orderCar._id,
         buyerInfo: orderForm,
       });
       toast.success("Order placed successfully! We'll contact you soon.");
       setShowOrderModal(false);
+      setOrderCar(null);
       setOrderForm({ firstName: "", lastName: "", phone: "", email: "" });
+      setDiscussPrice(false);
+      setAcceptTerms(false);
     } catch (err: any) {
       console.error("Failed to create order:", err);
       toast.error(err.response?.data?.message || "Failed to place order");
@@ -211,9 +223,14 @@ const Cars: React.FC = () => {
   };
 
   const handleBuyNow = (car: Car, e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default behavior
     e.stopPropagation(); // Prevent event bubbling
-    setSelectedCar(car);
+    setOrderCar(car); // Use separate state for order modal
     setShowOrderModal(true);
+    // Reset form and checkboxes when opening modal
+    setOrderForm({ firstName: "", lastName: "", phone: "", email: "" });
+    setDiscussPrice(false);
+    setAcceptTerms(false);
   };
 
   const clearFilters = () => {
@@ -455,6 +472,7 @@ const Cars: React.FC = () => {
                     {shortDescription}
                     <button
                       onClick={(e) => {
+                        e.preventDefault();
                         e.stopPropagation();
                         setSelectedCar(car);
                       }}
@@ -516,6 +534,7 @@ const Cars: React.FC = () => {
                     </button>
                     <button
                       onClick={(e) => {
+                        e.preventDefault();
                         e.stopPropagation();
                         setSelectedCar(car);
                       }}
@@ -643,7 +662,7 @@ const Cars: React.FC = () => {
       )}
 
       {/* Order Modal */}
-      {showOrderModal && selectedCar && (
+      {showOrderModal && orderCar && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
           <motion.div
             className="bg-white rounded-xl p-4 sm:p-6 lg:p-8 max-w-md w-full max-h-[90vh] overflow-y-auto"
@@ -656,7 +675,10 @@ const Cars: React.FC = () => {
                 Place Order
               </h3>
               <button
-                onClick={() => setShowOrderModal(false)}
+                onClick={() => {
+                  setShowOrderModal(false);
+                  setOrderCar(null);
+                }}
                 className="text-gray-400 hover:text-gray-600 text-2xl"
               >
                 ×
@@ -664,9 +686,9 @@ const Cars: React.FC = () => {
             </div>
 
             <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-semibold text-lg mb-2">{selectedCar.name}</h4>
+              <h4 className="font-semibold text-lg mb-2">{orderCar.name}</h4>
               <p className="text-2xl font-bold text-[#e35b25]">
-                ${selectedCar.price.toLocaleString()}
+                ${orderCar.price.toLocaleString()}
               </p>
             </div>
 
@@ -735,10 +757,67 @@ const Cars: React.FC = () => {
                 />
               </div>
 
+              {/* Checkboxes */}
+              <div className="space-y-3 pt-3 sm:pt-4">
+                <div className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    id="discussPrice"
+                    checked={discussPrice}
+                    onChange={(e) => setDiscussPrice(e.target.checked)}
+                    className="mt-1 h-4 w-4 text-[#e35b25] focus:ring-[#e35b25] border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="discussPrice"
+                    className="text-sm text-gray-700"
+                  >
+                    I would like to discuss the price with a sales
+                    representative
+                  </label>
+                </div>
+
+                <div className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    id="acceptTerms"
+                    checked={acceptTerms}
+                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                    className="mt-1 h-4 w-4 text-[#e35b25] focus:ring-[#e35b25] border-gray-300 rounded"
+                    required
+                  />
+                  <label
+                    htmlFor="acceptTerms"
+                    className="text-sm text-gray-700"
+                  >
+                    I have read and agree to the{" "}
+                    <a
+                      href="/terms"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#e35b25] hover:underline font-medium"
+                    >
+                      Terms and Conditions
+                    </a>{" "}
+                    *
+                  </label>
+                </div>
+              </div>
+
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
                 <button
                   type="button"
-                  onClick={() => setShowOrderModal(false)}
+                  onClick={() => {
+                    setShowOrderModal(false);
+                    setOrderCar(null);
+                    setOrderForm({
+                      firstName: "",
+                      lastName: "",
+                      phone: "",
+                      email: "",
+                    });
+                    setDiscussPrice(false);
+                    setAcceptTerms(false);
+                  }}
                   className="flex-1 px-3 sm:px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition text-sm sm:text-base"
                 >
                   Cancel
