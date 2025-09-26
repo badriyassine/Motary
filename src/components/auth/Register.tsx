@@ -105,6 +105,19 @@ const Register: React.FC = () => {
         <h2 className="text-4xl font-bold text-[#171b25] mb-6 text-center">
           Register
         </h2>
+
+        {/* Warning Message */}
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="flex items-start gap-2">
+            <div className="text-yellow-600 text-sm">⚠️</div>
+            <p className="text-sm text-yellow-800">
+              <strong>Important:</strong> Please double-check your information
+              before submitting. You won't be able to change your personal
+              details after registration.
+            </p>
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* First Name */}
           <div>
@@ -242,11 +255,11 @@ const Register: React.FC = () => {
       <AnimatePresence>
         {success && (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.5 }}
-            className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50"
           >
             Registration Successful! Redirecting...
           </motion.div>

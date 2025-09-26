@@ -692,6 +692,18 @@ const Cars: React.FC = () => {
               </p>
             </div>
 
+            {/* Warning Message */}
+            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="flex items-start gap-2">
+                <div className="text-yellow-600 text-sm">⚠️</div>
+                <p className="text-sm text-yellow-800">
+                  <strong>Important:</strong> Please verify your information
+                  carefully. You won't be able to modify your order details
+                  after submission.
+                </p>
+              </div>
+            </div>
+
             <form
               onSubmit={handleOrderSubmit}
               className="space-y-3 sm:space-y-4"
