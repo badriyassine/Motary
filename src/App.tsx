@@ -20,7 +20,8 @@ import Profile from "./components/pages/Profile";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import Orders from "./components/admin/Orders";
 import Terms from "./components/pages/Terms";
-import { NotificationProvider } from "./contexts/NotificationContext";
+import { useDispatch } from "react-redux";
+import { fetchNotifications } from "./store/slices/notificationSlice";
 
 // Map route paths to document titles
 const titles: Record<string, string> = {
@@ -58,45 +59,54 @@ const ScrollToTop: React.FC = () => {
   return null;
 };
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(fetchNotifications() as any);
+    }
+  }, [dispatch]);
   return (
-    <NotificationProvider>
-      <Router>
-        <TitleUpdater />
-        <ScrollToTop />
-        <div className="bg-[#f6f7f9] min-h-screen flex flex-col">
-          <TopHeader />
-          <Header />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/exclusive" element={<Exclusive />} />
-              <Route path="/cars" element={<Cars />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/dashboard" element={<AdminDashboard />} />
-              <Route path="/dashboard/orders" element={<Orders />} />
-            </Routes>
-          </main>
-          <Footer />
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: "#363636",
-                color: "#fff",
-              },
-            }}
-          />
-        </div>
-      </Router>
-    </NotificationProvider>
+    <Router>
+      <TitleUpdater />
+      <ScrollToTop />
+      <div className="bg-[#f6f7f9] min-h-screen flex flex-col">
+        <TopHeader />
+        <Header />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/exclusive" element={<Exclusive />} />
+            <Route path="/cars" element={<Cars />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/dashboard" element={<AdminDashboard />} />
+            <Route path="/dashboard/orders" element={<Orders />} />
+          </Routes>
+        </main>
+        <Footer />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: "#363636",
+              color: "#fff",
+            },
+          }}
+        />
+      </div>
+    </Router>
   );
 };
+
+const App: React.FC = () => {
+  return <AppContent />;
 
 export default App;

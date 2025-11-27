@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNotifications } from "../contexts/NotificationContext";
+import { useSelector, useDispatch } from "react-redux";
 import {
   FaBell,
   FaTimes,
@@ -12,17 +12,19 @@ import {
   FaExclamationTriangle,
 } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
+import { RootState, AppDispatch } from "../store/store";
+import {
+  markAsRead,
+  markAllAsRead,
+  removeNotification,
+} from "../store/slices/notificationSlice";
 
 const NotificationCenter: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    notifications,
-    unreadCount,
-    loading,
-    markAsRead,
-    markAllAsRead,
-    removeNotification,
-  } = useNotifications();
+  const dispatch = useDispatch<AppDispatch>();
+  const { notifications, unreadCount, loading } = useSelector(
+    (state: RootState) => state.notifications
+  );
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -60,7 +62,7 @@ const NotificationCenter: React.FC = () => {
 
   const handleNotificationClick = async (notification: any) => {
     if (!notification.read) {
-      await markAsRead(notification._id);
+      dispatch(markAsRead(notification._id));
     }
 
     if (notification.actionUrl) {
@@ -103,7 +105,7 @@ const NotificationCenter: React.FC = () => {
               <div className="flex items-center gap-2">
                 {unreadCount > 0 && (
                   <button
-                    onClick={markAllAsRead}
+                    onClick={() => dispatch(markAllAsRead())}
                     className="text-xs text-[#e35b25] hover:underline"
                   >
                     Mark all read
@@ -172,7 +174,7 @@ const NotificationCenter: React.FC = () => {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              removeNotification(notification._id);
+                              dispatch(removeNotification(notification._id));
                             }}
                             className="text-gray-400 hover:text-red-500 transition-colors"
                           >
